@@ -1,0 +1,1245 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html><head></head><body>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    
+    
+    
+
+  <div class="border-box-sizing">
+    <div class="container">
+
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1><span style="color:#0b486b;">SIT 112 - Data Science Concepts - Assignment 1</span><a rel="noopener" class="anchor-link" href="#SIT-112---Data-Science-Concepts---Assignment-1">&#182;</a></h1><hr/>
+<p>Lecturer: Sergiy Shelyag | sergiy.shelyag@deakin.edu.au<br/></p>
+<p>School of Information Technology, <br/>
+Deakin University, VIC 3215, Australia.</p>
+<h3><span style="color:#0b486b;">Due: 5pm, Friday 12th April 2019</span><a rel="noopener" class="anchor-link" href="#Due:-5pm,-Friday-12th-April-2019">&#182;</a></h3><hr/>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3><span style="color:#0b486b;">Instructions</span><a rel="noopener" class="anchor-link" href="#Instructions">&#182;</a></h3><p>This notebook has been prepared for you to complete Assignment 1. Some sections have been pre-filled  to help you get started. <strong>The total mark for this programming task is 65</strong>.</p>
+<ol>
+<li>Before you start, read the entire notebook carefully to understand what you need to do. You should also refer to the main instructions in <em>Assignment1_instructions.pdf</em>  to know what else you need to complete for this assignment.</li>
+<li>For each cell marked with <em>#INSERT YOUR CODE HERE</em>, you must write your own code in this cell.</li>
+<li>At the end, you must run the entire notebook and submit two files:<ol>
+<li>The source of your solution notebook: [YourID]_assignment1_solution.ipynb</li>
+<li>And an exported version of your output: [YourID]_assignment1_output.html  </li>
+</ol>
+</li>
+</ol>
+<p>For example, if your student ID is 123456, then you need submit two files:</p>
+<ol>
+<li><strong>123456_assignment1_solution.ipynb</strong></li>
+<li>and <strong>123456_assignment1_output.html</strong></li>
+</ol>
+<p>As you go through this notebook:</p>
+<ul>
+<li>markdown cells marked with <strong>Note</strong> mean description sections.</li>
+<li>markdown cells marked with <strong>Instructions</strong> mean the instructions given to you to complete the sections.</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&#160;[31]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class="highlight hl-ipython3"><pre><span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Import packages needed for processing</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>   <span class="c1"># import the numpy package</span>
+<span class="kn">import</span> <span class="nn">csv</span>           <span class="c1"># this package needed for processing csv file</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">Counter</span>  <span class="c1"># this is for dictionary construction with counting functionality</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>  <span class="c1"># this is for plotting and other descriptive statistics</span>
+<span class="kn">import</span> <span class="nn">datetime</span>      <span class="c1"># this package is for handling time</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">If you need add any additional packages, then add them below this line</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="o">%</span><span class="k">matplotlib</span> inline
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><strong>Note</strong>: you must place your data file in the same folder with your python notebook.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&#160;[32]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># Declare the path to the data file</span>
+<span class="n">DATA_FILE</span> <span class="o">=</span> <span class="s2">&quot;medicare-office-locations.csv&quot;</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><strong>Note</strong>. The following segment of codes is to load the data from the .csv file using csv package. It has been provided for you to get started. Please <strong>do not</strong> change this piece of code as well the variable names as we will need these variables to complete subsequent tasks.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&#160;[33]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># Load CSV file using DictReader</span>
+<span class="n">input_file</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">DictReader</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">DATA_FILE</span><span class="p">))</span>
+<span class="n">fieldnames</span> <span class="o">=</span> <span class="n">input_file</span><span class="o">.</span><span class="n">fieldnames</span>
+<span class="n">data_dict</span> <span class="o">=</span> <span class="p">{</span><span class="n">fn</span><span class="p">:</span> <span class="p">[]</span> <span class="k">for</span> <span class="n">fn</span> <span class="ow">in</span> <span class="n">fieldnames</span><span class="p">}</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">data_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+<span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">input_file</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">line</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">data_dict</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">v</span><span class="p">))</span>
+        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">data_dict</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">v</span><span class="p">))</span>
+            <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                <span class="n">data_dict</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+                
+<span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">data_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="n">data_dict</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>dict_keys([&#39;No.&#39;, &#39;OFFICE TYPE&#39;, &#39;SITE NAME&#39;, &#39;ADDRESS&#39;, &#39;SUBURB&#39;, &#39;STATE&#39;, &#39;POSTCODE&#39;, &#39;LATITUDE&#39;, &#39;LONGITUDE&#39;, &#39;Open&#39;, &#39;Close&#39;, &#39;Closed for lunch&#39;])
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<hr/>
+<h2><strong>Instruction 1</strong><a rel="noopener" class="anchor-link" href="#Instruction-1">&#182;</a></h2><p>We first examine the variables and the overall data size. The tasks:</p>
+<ol>
+<li><p>Write your code to print the type for the following variables (<strong>4 marks</strong>):</p>
+<ul>
+<li>input_file</li>
+<li>data_dict</li>
+<li>data_dict[&#39;SUBURB&#39;]</li>
+<li>data_dict[&#39;STATE&#39;]</li>
+</ul>
+</li>
+<li><p>Write your code to print out the number of data records. (<strong>1 mark</strong>)</p>
+</li>
+</ol>
+<p>[<strong>Total mark: 5</strong>]</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&#160;[34]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># INSERT YOUR CODE HERE</span>
+<span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">1. Write you code to print the type for the following variables:</span>
+<span class="sd">    * input_file</span>
+<span class="sd">    * data_dict</span>
+<span class="sd">    * data_dict[&#39;SUBURB&#39;]</span>
+<span class="sd">    * data_dict[&#39;STATE&#39;]</span>
+<span class="sd">&#39;&#39;&#39;</span>
+<span class="nb">print</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">input_file</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">data_dict</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">data_dict</span><span class="p">[</span><span class="s1">&#39;SUBURB&#39;</span><span class="p">]))</span>
+<span class="nb">print</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">data_dict</span><span class="p">[</span><span class="s1">&#39;STATE&#39;</span><span class="p">]))</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>&lt;class &#39;csv.DictReader&#39;&gt;
+&lt;class &#39;dict&#39;&gt;
+&lt;class &#39;numpy.ndarray&#39;&gt;
+&lt;class &#39;numpy.ndarray&#39;&gt;
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&#160;[35]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># INSERT YOUR CODE HERE</span>
+<span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">2. Write your code to print out the number of data records</span>
+<span class="sd">&#39;&#39;&#39;</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">data_dict</span><span class="p">[</span><span class="s1">&#39;SUBURB&#39;</span><span class="p">]))</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>239
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<hr/>
+<h2>Instruction 2<a rel="noopener" class="anchor-link" href="#Instruction-2">&#182;</a></h2><p>The following code segment is designed to calculate some basic statistics from the data.</p>
+<p><strong>Your task:</strong></p>
+<ol>
+<li>Write your code to find and print the minimum and the maximum values in the <strong>LATITUDE</strong> column. (<strong>1 mark</strong>)</li>
+<li>Write your code to find and print the minimum and maximum values of the <strong>LONGITUDE</strong> column. (<strong>1 marks</strong>)</li>
+<li>Write your code to find and print the central point of all the locations. This point is a pair of the average of latitudes <em>(the <strong>LATITUDE</strong> column)</em> and the average of longitudes <em>(the <strong>LONGITUDE</strong> column)</em>. (<strong>3 marks</strong>)</li>
+</ol>
+<p><strong>[Total mark: 5]</strong></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&#160;[36]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># INSERT YOUR CODE HERE</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">1. Write your code to find and print the minimum and the maximum values in the **LATITUDE** column.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="n">x_lat</span> <span class="o">=</span> <span class="n">data_dict</span><span class="p">[</span><span class="s1">&#39;LATITUDE&#39;</span><span class="p">]</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;The maximum value in the latitude column is:&quot;</span><span class="p">,</span><span class="nb">max</span><span class="p">(</span><span class="n">x_lat</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;The minimum value in the latitude column is:&quot;</span><span class="p">,</span><span class="nb">min</span><span class="p">(</span><span class="n">x_lat</span><span class="p">))</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>The maximum value in the latitude column is: -12.37187
+The minimum value in the latitude column is: -42.97638
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&#160;[37]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># INSERT YOUR CODE HERE</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">2. Write your code to find and print the minimum and maximum values of the **LONGITUDE** column.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="n">x_long</span> <span class="o">=</span> <span class="n">data_dict</span><span class="p">[</span><span class="s1">&#39;LONGITUDE&#39;</span><span class="p">]</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;The maximum value in the longitude column is:&quot;</span><span class="p">,</span><span class="nb">max</span><span class="p">(</span><span class="n">x_long</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;The minimum value in the longitude column is:&quot;</span><span class="p">,</span><span class="nb">min</span><span class="p">(</span><span class="n">x_long</span><span class="p">))</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>The maximum value in the longitude column is: 153.55671
+The minimum value in the longitude column is: 114.61273
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&#160;[38]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># INSERT YOUR CODE HERE</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">3. Write your code to find and print the central point of all the locations. </span>
+<span class="sd">This point is a pair of the average of latitudes *(the **LATITUDE** column)* </span>
+<span class="sd">    and the average of longitudes *(the **LONGITUDE** column)*</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="n">x</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">data_dict</span><span class="p">[</span><span class="s1">&#39;LATITUDE&#39;</span><span class="p">])</span>
+<span class="n">x_size</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">data_dict</span><span class="p">[</span><span class="s1">&#39;LATITUDE&#39;</span><span class="p">])</span>
+<span class="n">x_avg</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span><span class="o">/</span><span class="n">x_size</span><span class="p">)</span>
+
+
+<span class="n">y</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">data_dict</span><span class="p">[</span><span class="s1">&#39;LONGITUDE&#39;</span><span class="p">])</span>
+<span class="n">y_size</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">data_dict</span><span class="p">[</span><span class="s1">&#39;LONGITUDE&#39;</span><span class="p">])</span>
+<span class="n">y_avg</span> <span class="o">=</span> <span class="p">(</span><span class="n">y</span><span class="o">/</span><span class="n">y_size</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;The central point of all the locations is:&quot;</span><span class="p">,</span> <span class="n">x_avg</span><span class="p">,</span> <span class="s1">&#39;,&#39;</span><span class="p">,</span> <span class="n">y_avg</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>The central point of all the locations is: -32.47650179916318 , 145.58025615062755
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<hr/>
+<h2><strong>Instruction 3</strong><a rel="noopener" class="anchor-link" href="#Instruction-3">&#182;</a></h2><p>The following code segment is designed to examine data from the <strong>STATE</strong> column. This column provides information about the states of medical centers.</p>
+<p><strong>Your tasks</strong>:</p>
+<ol>
+<li>Write your code to find and print out the number of <strong>unique</strong> states. (<strong>3 marks</strong>)</li>
+<li>Write your code to find and print out the list of states that appears more than <strong>ten</strong> times in the dataset. (<strong>3 marks</strong>)</li>
+<li>Write your code to find and print out the state with highest frequency. Both the state name and frequency need to be printed out (<strong>3 marks</strong>)</li>
+<li>Write your code to construct a dictionary variable: <strong><em>state_popularity</em></strong> whose keys are unique states and values are the corresponding counts computed from the dataset. Print the dictionary. (<strong>3 marks</strong>)</li>
+<li>Plot a bar chart for <strong><em>state_popularity</em></strong> sorted in descending order of values. (<strong>3 marks</strong>)</li>
+</ol>
+<p>[<strong>Total mark: 15</strong>]</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&#160;[39]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># INSERT YOUR CODE HERE </span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">1. Write your code to find and print out the number of **unique** states.</span>
+<span class="sd">Hint: you might want to use np.unique</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="n">z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">data_dict</span><span class="p">[</span><span class="s1">&#39;STATE&#39;</span><span class="p">])</span>
+<span class="n">p</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;The number of unique states is:&quot;</span><span class="p">,</span><span class="n">p</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>The number of unique states is: 8
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&#160;[40]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># INSERT YOUR CODE HERE </span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">2. Write your code to find and print out the list of states </span>
+<span class="sd">    that appears more than **ten** times in the dataset.</span>
+
+<span class="sd">Hint: read the documention for function numpy.unique carefully and examine what does it return.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">data_dict</span><span class="p">[</span><span class="s1">&#39;STATE&#39;</span><span class="p">],</span><span class="n">return_counts</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">unique_states</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">unique_states_value</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="mi">0</span><span class="p">])):</span>
+    <span class="k">if</span> <span class="n">unique_states_value</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">10</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">i</span><span class="p">])</span>
+        
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>NSW
+QLD
+SA
+VIC
+WA
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&#160;[41]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># INSERT YOUR CODE HERE </span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">3. Write your code to find and print out the state with highest frequency. </span>
+<span class="sd">Both the state name and frequency need to be printed out</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="p">(</span><span class="n">values</span><span class="p">,</span><span class="n">counts</span><span class="p">)</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">data_dict</span><span class="p">[</span><span class="s1">&#39;STATE&#39;</span><span class="p">],</span><span class="n">return_counts</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">counts</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;The state with highest frequency is:&quot;</span><span class="p">,</span> <span class="n">values</span><span class="p">[</span><span class="n">x</span><span class="p">])</span> 
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;The highest frequency is:&quot;</span><span class="p">,</span> <span class="n">counts</span><span class="p">[</span><span class="n">x</span><span class="p">])</span> 
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>The state with highest frequency is: NSW
+The highest frequency is: 87
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&#160;[42]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># INSERT YOUR CODE HERE </span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">4. Write your code to construct a dictionary variable: ***state_popularity*** </span>
+<span class="sd">    whose keys are unique states and values are the corresponding counts computed from the dataset.</span>
+<span class="sd">Print the dictionary.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">data_dict</span><span class="p">[</span><span class="s1">&#39;STATE&#39;</span><span class="p">],</span><span class="n">return_counts</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">unique_states</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">unique_states_value</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
+<span class="n">zipping_up</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span><span class="n">unique_states</span><span class="p">,</span> <span class="n">unique_states_value</span><span class="p">)</span>
+ 
+<span class="n">state_popularity</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">zipping_up</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">state_popularity</span><span class="p">)</span>
+    
+
+    
+         
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>{&#39;ACT&#39;: 5, &#39;NSW&#39;: 87, &#39;NT&#39;: 4, &#39;QLD&#39;: 49, &#39;SA&#39;: 14, &#39;TAS&#39;: 7, &#39;VIC&#39;: 54, &#39;WA&#39;: 19}
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&#160;[43]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># INSERT YOUR CODE HERE </span>
+<span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">5. Plot a bar chart for state_popularity sorted in descending order of values.</span>
+<span class="sd">&#39;&#39;&#39;</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">Counter</span><span class="p">(</span><span class="n">data_dict</span><span class="p">[</span><span class="s1">&#39;STATE&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">most_common</span><span class="p">()</span>
+
+<span class="n">list1</span><span class="o">=</span><span class="p">[]</span>
+<span class="n">list2</span><span class="o">=</span><span class="p">[]</span>
+
+
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="p">)):</span>
+    <span class="n">list1</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">y</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">list2</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">y</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">7</span><span class="p">))</span>    
+<span class="n">ax</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">list1</span><span class="p">,</span> <span class="n">list2</span><span class="p">,</span> <span class="n">align</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;States&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Values&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;State popularity&quot;</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[43]:</div>
+
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>Text(0.5, 1.0, &#39;State popularity&#39;)</pre>
+</div>
+
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+
+<div class="output_png output_subarea">
+<img src="javascript://"/>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<hr/>
+<h2><strong>Instruction 4</strong><a rel="noopener" class="anchor-link" href="#Instruction-4">&#182;</a></h2><p>We shall examine the opening hours of the medicare offices. The time is a string in the format: <strong>&#39;Hour:Minute:Second&#39;</strong>. If the time is not in the correct form, the opening duration of the office is <strong>invalid</strong>. Run the cell below:</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&#160;[44]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># print the opening time and closing time of the first medicare office.</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">data_dict</span><span class="p">[</span><span class="s1">&#39;Open&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">data_dict</span><span class="p">[</span><span class="s1">&#39;Close&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>8:30:00
+16:30:00
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><strong>Your tasks</strong>:</p>
+<ol>
+<li>Define a function called <code>compute_opening_duration</code> that takes two strings: the opening time and the closing time as the inputs and return the opening duration in hours. If the opening time or the closing time are not in the correct form, the function returns -1. (<strong>7 marks</strong>)</li>
+<li>Write your code to calculate an array called <strong>opening_duration_list</strong> that stores the opening duration of all medicare offices. Store the array as a numpy array. Print the first 10 entries in the array. (<strong>3 mark</strong>)</li>
+<li>Construct a new array called <strong>valid_opening_duration_list</strong> to store only valid opening duration entries and then print out the number of elements in the array. (<strong>3 marks</strong>)</li>
+<li>Print the min, max, median and construct a box-plot for variable <strong>valid_opening_duration_list</strong>. (<strong>5 marks</strong>)</li>
+</ol>
+<p>[<strong>Total mark: 18</strong>]</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&#160;[45]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class="highlight hl-ipython3"><pre><span></span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">1. Define a function called `compute_opening_duration` to calculate the duration of the opening time. </span>
+<span class="sd">The function takes two strings: the opening time and the closing time as the inputs and return the opening duration in hours.</span>
+<span class="sd">The opening time and the closing time are in the form &#39;Hour:Minute:Second&#39;.</span>
+<span class="sd">If the opening time or the closing time are not in the correct form, the function returns -1.</span>
+
+<span class="sd">Example: </span>
+<span class="sd">    opening time: &#39;8:30:00&#39;, closing time: &#39;16:00:00&#39;, return 7.5</span>
+<span class="sd">    opening time: &#39;9:00:00&#39;, closing time: &#39;16:15:00&#39;, return 7.25</span>
+<span class="sd">    opening time: &#39;8:30:00&#39;, closing time: &#39;evening&#39;, return -1</span>
+<span class="sd">    </span>
+<span class="sd">Hint: you might want to use datetime package</span>
+<span class="sd">&#39;&#39;&#39;</span>
+
+<span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Input: two string: opening_time and closing_time</span>
+<span class="sd">    Output: the opening duration in hours</span>
+<span class="sd">    Return -1 if any time is in incorrect form.</span>
+<span class="sd">&#39;&#39;&#39;</span>
+    <span class="c1"># INSERT YOUR CODE HERE</span>
+<span class="n">string_format</span><span class="o">=</span> <span class="s1">&#39;%H:%M:%S&#39;</span>
+<span class="n">p</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s1">&#39;Opening time: &#39;</span><span class="p">)</span>
+<span class="n">q</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s1">&#39;Closing time: &#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">compute_opening_duration</span><span class="p">(</span><span class="n">opening_time</span><span class="p">,</span> <span class="n">closing_time</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">opening_time</span><span class="p">,</span><span class="n">string_format</span><span class="p">)</span>
+        <span class="n">b</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">closing_time</span><span class="p">,</span><span class="n">string_format</span><span class="p">)</span>
+        <span class="n">difference_time</span> <span class="o">=</span> <span class="n">b</span><span class="o">-</span><span class="n">a</span>
+        
+        <span class="k">return</span><span class="p">(</span><span class="n">difference_time</span><span class="o">.</span><span class="n">seconds</span><span class="o">/</span><span class="mi">3600</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s1">&#39;-1&#39;</span>
+    
+<span class="nb">print</span><span class="p">(</span><span class="n">compute_opening_duration</span><span class="p">(</span><span class="n">p</span><span class="p">,</span><span class="n">q</span><span class="p">))</span>     
+
+    
+    
+    
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Opening time: 11:00:00
+Closing time: 12:000:00
+-1
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&#160;[46]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># INSERT YOUR CODE HERE</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">2. Write your code to calculate an array called **opening_duration_list** </span>
+<span class="sd">    that stores the opening duration of all medicare offices.</span>
+<span class="sd">Store the array as a numpy array.</span>
+<span class="sd">Print the first 10 entries in the array. </span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="n">opening_duration_list</span><span class="o">=</span><span class="p">[]</span>    
+<span class="n">x</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">data_dict</span><span class="p">[</span><span class="s1">&#39;No.&#39;</span><span class="p">])</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">opening_duration_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">compute_opening_duration</span><span class="p">(</span><span class="n">data_dict</span><span class="p">[</span><span class="s1">&#39;Open&#39;</span><span class="p">][</span><span class="n">i</span><span class="p">],</span> <span class="n">data_dict</span><span class="p">[</span><span class="s1">&#39;Close&#39;</span><span class="p">][</span><span class="n">i</span><span class="p">])))</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">opening_duration_list</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">10</span><span class="p">])</span>
+
+    
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>[8.0, 8.5, 6.5, 7.5, 6.5, 6.5, 8.5, 6.5, 7.5, 6.5]
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&#160;[47]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># INSERT YOUR CODE HERE </span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">3. Construct a new array called **valid_opening_duration_list** to store only valid opening duration entries and </span>
+<span class="sd">then print out the number of elements in the array.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="n">x</span><span class="o">=</span><span class="mi">0</span>
+<span class="n">valid_opening_duration_list</span><span class="o">=</span><span class="p">[]</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">data_dict</span><span class="p">[</span><span class="s1">&#39;Open&#39;</span><span class="p">]:</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">),</span><span class="n">string_format</span><span class="p">):</span>
+            <span class="n">valid_opening_duration_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">opening_duration_list</span><span class="p">[</span><span class="n">x</span><span class="p">])</span>
+            
+    <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">end</span><span class="o">=</span><span class="s2">&quot; &quot;</span><span class="p">)</span>
+    <span class="n">x</span><span class="o">=</span><span class="n">x</span><span class="o">+</span><span class="mi">1</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Valid durations are:&quot;</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">valid_opening_duration_list</span><span class="p">))</span>
+            
+        
+  
+  
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>    Valid durations are: 235
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&#160;[48]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># INSERT YOUR CODE HERE</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">4. Print the min, max, median and construct a box-plot for variable **valid_opening_duration_list**</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">statistics</span>
+<span class="n">minimum_value</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">valid_opening_duration_list</span><span class="p">)</span>
+
+<span class="n">maximum_value</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">valid_opening_duration_list</span><span class="p">)</span>
+
+<span class="n">median_value</span> <span class="o">=</span> <span class="n">statistics</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">valid_opening_duration_list</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">minimum_value</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">maximum_value</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">median_value</span><span class="p">)</span>
+<span class="n">plot</span> <span class="o">=</span> <span class="p">[</span><span class="n">minimum_value</span><span class="p">,</span><span class="n">maximum_value</span><span class="p">,</span><span class="n">median_value</span><span class="p">]</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">boxplot</span><span class="p">(</span><span class="n">plot</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>6.5
+9.0
+8.0
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[48]:</div>
+
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>&lt;function matplotlib.pyplot.show(*args, **kw)&gt;</pre>
+</div>
+
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+
+<div class="output_png output_subarea">
+<img src="javascript://"/>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<hr/>
+<h2><strong>Instruction 5</strong><a rel="noopener" class="anchor-link" href="#Instruction-5">&#182;</a></h2><p>Continue from the previous steps, <strong>your tasks are:</strong></p>
+<ol>
+<li>Write your code to find and print all the invalid entry indices. An entry is invalid when its opening duration is invalid. (<strong>5 marks</strong>).</li>
+<li>Write your code to filter out all invalid entries and store your data into a new variable <strong>data_dict_cleaned</strong> and print out the number of data records after being cleaned. (<strong>5 marks</strong>)</li>
+</ol>
+<p>[<strong>Total mark: 10</strong>]</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&#160;[49]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># INSERT YOUR CODE HERE</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">1. Write your code to find and print all the invalid entry indices.</span>
+<span class="sd"> You might want to use np.where function.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="n">x</span><span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+<span class="n">invalid_entry</span><span class="o">=</span><span class="p">[]</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">data_dict</span><span class="p">[</span><span class="s1">&#39;Open&#39;</span><span class="p">]:</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">),</span><span class="n">string_format</span><span class="p">):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">end</span><span class="o">=</span><span class="s1">&#39; &#39;</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+        <span class="n">invalid_entry</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">data_dict</span><span class="p">[</span><span class="s1">&#39;No.&#39;</span><span class="p">][</span><span class="n">x</span><span class="p">])</span>
+    <span class="n">x</span><span class="o">=</span><span class="n">x</span><span class="o">+</span><span class="mi">1</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;The invalid entry indices are:&quot;</span><span class="p">,</span><span class="n">invalid_entry</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>                                                                                                                                                                                                                                           The invalid entry indices are: [15, 35, 127, 220]
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&#160;[50]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># INSERT YOUR CODE HERE</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">2. Write your code to filter out all invalid entries </span>
+<span class="sd">and store your data into a new variable data_dict_cleaned</span>
+<span class="sd">and print out the number of data records after being cleaned.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="n">x</span><span class="o">=</span><span class="mi">0</span>
+<span class="n">data_dict_cleaned</span><span class="o">=</span><span class="p">[]</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">data_dict</span><span class="p">[</span><span class="s1">&#39;Open&#39;</span><span class="p">]:</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">),</span><span class="n">string_format</span><span class="p">):</span>
+            <span class="n">data_dict_cleaned</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">data_dict</span><span class="p">[</span><span class="s1">&#39;SITE NAME&#39;</span><span class="p">][</span><span class="n">x</span><span class="p">])</span>
+    <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">end</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+    <span class="n">x</span><span class="o">=</span><span class="n">x</span><span class="o">+</span><span class="mi">1</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;The number of clean records are:&quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">data_dict_cleaned</span><span class="p">))</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>The number of clean records are: 235
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<hr/>
+<h2><strong>Instruction 6</strong><a rel="noopener" class="anchor-link" href="#Instruction-6">&#182;</a></h2><p>The following code segment is designed to examine data from <strong>ADDRESS</strong> column.</p>
+<p>We say that an address is <strong>valid</strong> if it contains the number and the name of the street, which are separated by spaces. The formats for a valid street name is <strong>&quot;stNumber stName&quot;</strong> or <strong>&quot;stNumber1-stNumber2 stName&quot;</strong>, where <strong>stNumber</strong>, <strong>stNumber1</strong> and <strong>stNumber2</strong> are positive numbers and <strong>stName</strong> is any non-empty string. For example, <strong>20 St Kilda Road</strong> and <strong>100-104 Elliott Avenue</strong> are valid addresses while <strong>St Kilda Road</strong> and <strong>0 Elliott Avenue</strong> are invalid addresses.</p>
+<p><strong>Your tasks</strong>:</p>
+<ol>
+<li>Define a function called <code>valid_address</code> that takes a string <code>address</code> and returns <code>True</code> if <code>address</code> is valid and <code>False</code> otherwise. (<strong>7 marks</strong>)</li>
+<li>Write your code to <strong>further</strong> filter out all entries with invalid addresses, and store your cleaned data into the new variable named <strong><em>data_dict_cleaned2</em></strong> and print out the number of data records after being cleaned. (<strong>5 marks</strong>)</li>
+</ol>
+<p><strong>Note:</strong></p>
+<ol>
+<li>All street numbers if exist in an address are integers. There is at most a hyphen in an address to connect two street numbers.</li>
+<li>In reality, an address can be &quot;Shop 3, 10 St Kilda Road&quot;. However, for simplicity, we only consider the valid address contains street numbers and a street name.</li>
+</ol>
+<p>[<strong>Total mark: 12</strong>]</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&#160;[51]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># INSERT YOUR CODE HERE</span>
+<span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">1. Define a function called valid_address that takes a string address and</span>
+<span class="sd">returns True if address is valid and False otherwise.</span>
+<span class="sd">&#39;&#39;&#39;</span>
+<span class="k">def</span> <span class="nf">valid_address</span><span class="p">(</span><span class="n">inp</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">street_num</span><span class="p">,</span> <span class="n">street_name</span> <span class="o">=</span> <span class="n">inp</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">street_num</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">)</span><span class="o">!=-</span><span class="mi">1</span> <span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="n">street_num</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">street_num</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">street_num</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">elif</span> <span class="nb">type</span><span class="p">(</span><span class="n">street_num</span><span class="p">)</span> <span class="o">==</span> <span class="nb">int</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        
+        <span class="k">return</span> <span class="kc">True</span>
+    <span class="k">except</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">False</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">valid_address</span><span class="p">(</span><span class="s2">&quot;23 Hello-World&quot;</span><span class="p">))</span>
+    
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>True
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&#160;[53]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># INSERT YOUR CODE HERE</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">2. Write your code to further filter out all entries with invalid addresses, and store your cleaned data </span>
+<span class="sd">    into the new variable named data_dict_cleaned2 and print out the number of data records </span>
+<span class="sd">    after being cleaned.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="n">data_dict_cleaned2</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">data_dict</span><span class="p">[</span><span class="s2">&quot;ADDRESS&quot;</span><span class="p">])):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">valid_address</span><span class="p">(</span><span class="n">data_dict</span><span class="p">[</span><span class="s1">&#39;ADDRESS&#39;</span><span class="p">][</span><span class="n">i</span><span class="p">]):</span>
+            <span class="n">data_dict_cleaned2</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">valid_address</span><span class="p">(</span><span class="n">data_dict</span><span class="p">[</span><span class="s1">&#39;ADDRESS&#39;</span><span class="p">][</span><span class="n">i</span><span class="p">]))</span>
+    <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+        <span class="k">continue</span>
+            
+<span class="nb">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">data_dict_cleaned2</span><span class="p">))</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>199
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&#160;[&#160;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class="highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&#160;[&#160;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class="highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&#160;[&#160;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class="highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    </div>
+  </div>
+
+
+ 
+
+
+
+<script type="text/javascript" src="/d2l/common/math/MathML.js?v=20.21.10.32920 "></script><script type="text/javascript">document.addEventListener('DOMContentLoaded', function() { D2LMathML.DesktopInit('https://s.brightspace.com/lib/mathjax/2.7.4/MathJax.js?config=MML_HTMLorMML','https://s.brightspace.com/lib/mathjax/2.7.4/MathJax.js?config=TeX-AMS-MML_HTMLorMML','130',true); });</script></body></html>
